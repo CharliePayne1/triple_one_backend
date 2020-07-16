@@ -1,16 +1,25 @@
 class DoctorsController < ApplicationController
     
     def login
-        byebug
-        # try and find the doctor with the username we've been given
         doctor = Doctor.find_by(username: params[:username])
-        # if we can find them, try and authenticate the user with the password we've been given
         if doctor && doctor.authenticate(params[:password])
-            # if we can authenticate them, log them in
-            render json: { message: "Success"}
+            render json: { username: doctor.username, token: generate_token({ id: doctor.id})}
         else
             render json: { message: "Failure"}
         end
+    end
+
+    def validate
+        id = decode_token
+        doctor = Doctor.find_by(id: id)
+        render json: { username: doctor.username, token: generate_token({ id: doctor.id})}
+    end
+
+
+    private
+
+    def doctor_params
+        params.require(:doctor).permit(:username)
     end
 
 end
