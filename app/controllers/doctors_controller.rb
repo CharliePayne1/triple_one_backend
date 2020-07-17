@@ -10,8 +10,7 @@ class DoctorsController < ApplicationController
     end
 
     def validate
-        id = decode_token
-        doctor = Doctor.find_by(id: id)
+        doctor = current_doctor
         render json: { username: doctor.username, token: generate_token({ id: doctor.id})}
     end
 

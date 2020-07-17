@@ -1,8 +1,12 @@
 class CasesController < ApplicationController
 
     def index
-        cases = Case.where(decision: "awaiting decision")
-        render json: { cases: cases }
+        if current_doctor
+            cases = Case.where(decision: "awaiting decision")
+            render json: { cases: cases }
+        else 
+            render json: {error: "nope"}
+        end
     end
 
     def show
@@ -14,12 +18,11 @@ class CasesController < ApplicationController
         new_case = Case.create(case_params)
     end
 
-    def edit
-        
-    end
-
     def update
-    
+        doctor = current_doctor
+        update_case = Case.find_by(id: params[:id])
+        update_case.update(decision: params[:decision], doctor: doctor)
+        render json: update_case
     end
 
     private

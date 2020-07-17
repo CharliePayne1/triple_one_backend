@@ -10,6 +10,16 @@ class ApplicationController < ActionController::API
 
     def decode_token
         token = request.headers["Authorization"]
-        data = JWT.decode(token, secret).first["id"]
+        begin
+            JWT.decode(token, secret).first
+        rescue
+            {}
+        end
     end
+    
+    def current_doctor
+        id = decode_token["id"]
+        Doctor.find_by(id: id)
+    end
+
 end
