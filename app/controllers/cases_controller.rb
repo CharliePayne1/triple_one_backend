@@ -1,7 +1,7 @@
 class CasesController < ApplicationController
 
     def index
-        cases = Case.all
+        cases = Case.where(decision: "awaiting decision")
         render json: { cases: cases }
     end
 
@@ -25,7 +25,7 @@ class CasesController < ApplicationController
     private
 
         def case_params
-            params.require(:case).permit(:symptoms, :symptoms, :image_url, :email, :decision, :doctor_id)
+            params.require(:case).permit(:symptoms, :image_url, :email)
         end
 
 end
