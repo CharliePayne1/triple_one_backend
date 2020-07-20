@@ -22,6 +22,7 @@ class CasesController < ApplicationController
         doctor = current_doctor
         update_case = Case.find_by(id: params[:id])
         update_case.update(decision: params[:decision], doctor: doctor)
+        TripleOneEmailMailer.with(update_case: update_case).decision_email(update_case).deliver_now
         render json: update_case
     end
 
